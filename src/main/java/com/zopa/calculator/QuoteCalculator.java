@@ -4,6 +4,7 @@ import com.zopa.model.Offer;
 import com.zopa.model.Quote;
 
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public interface QuoteCalculator {
@@ -14,5 +15,5 @@ public interface QuoteCalculator {
      * @param numberOfMonths number of months to repay the loan
      * @return Quote if available, otherwise empty
      */
-    Optional<Quote> calculateQuote(TreeSet<Offer> offerSet, int amount, int numberOfMonths);
+    Optional<Quote> calculateQuote(SortedSet<Offer> offerSet, int amount, int numberOfMonths);
 }

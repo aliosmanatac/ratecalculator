@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 @Getter
 @Builder
 public class Offer implements Comparable {
-    String lender;
-    int amount;
-    BigDecimal rate;
+    private String lender;
+    private int amount;
+    private BigDecimal rate;
 
     @Override
     public int compareTo(Object offer) {

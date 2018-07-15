@@ -1,15 +1,18 @@
 package com.zopa.calculator;
 
 import com.zopa.model.Offer;
+import com.zopa.model.WeightedValue;
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
+import java.util.SortedSet;
 
 import static org.springframework.util.Assert.isTrue;
-import static org.springframework.util.Assert.notNull;
 
 @Component
 public class QuoteCalculatorHelperImpl implements QuoteCalculatorHelper {
@@ -24,26 +27,32 @@ public class QuoteCalculatorHelperImpl implements QuoteCalculatorHelper {
      * @return calculated rate as optional if offers satisfy amount.
      *      * otherwise return empty
      */
-    public Optional<BigDecimal> calculateRate(final TreeSet<Offer> offerSet, final int amount) {
-        notNull(offerSet, "offerSet cannot be null");
+    public Optional<BigDecimal> calculateRate(@NonNull final SortedSet<Offer> offerSet, final int amount) {
         isTrue(amount > 0, "amount should be positive");
 
-        int currAmount = 0;
-        BigDecimal currRate = new BigDecimal(0);
+        List<WeightedValue> offersToLoan = new LinkedList<>();
+        int currTotal = 0;
         for (Offer offer: offerSet) {
-            if (currAmount + offer.getAmount() < amount) {
-                currRate = calculateWeightedAverage(currRate, new BigDecimal(currAmount),
-                        offer.getRate(), new BigDecimal(offer.getAmount()));
-                currAmount = currAmount + offer.getAmount();
+            if (currTotal + offer.getAmount() < amount) {
+                offersToLoan.add(WeightedValue.builder()
+                        .weight(BigDecimal.valueOf(offer.getAmount()))
+                        .value(offer.getRate())
+                        .build());
+                currTotal = currTotal + offer.getAmount();
             } else {
-                currRate = calculateWeightedAverage(currRate, new BigDecimal(currAmount),
-                        offer.getRate(), new BigDecimal(amount - currAmount));
-                currAmount = amount;
+                offersToLoan.add(WeightedValue.builder()
+                        .weight(BigDecimal.valueOf(amount - currTotal))
+                        .value(offer.getRate())
+                        .build());
+                currTotal = amount;
                 break;
             }
         }
 
-        return currAmount == amount ? Optional.of(currRate) : Optional.empty();
+        return currTotal == amount ? Optional.of(offersToLoan.stream()
+                .reduce(QuoteCalculatorHelperImpl::calculateWeightedAverage)
+                .get()
+                .getValue()) : Optional.empty();
     }
 
     /**
@@ -54,8 +63,7 @@ public class QuoteCalculatorHelperImpl implements QuoteCalculatorHelper {
      * @param numberOfMonths Total number of months of repayment
      * @return Discount factor
      */
-    public BigDecimal calculateDiscountFactor(final BigDecimal rate, final int numberOfMonths) {
-        notNull(rate, "rate cannot be null");
+    public BigDecimal calculateDiscountFactor(@NonNull final BigDecimal rate, final int numberOfMonths) {
         isTrue(numberOfMonths > 0, "numberOfMonths should be positive");
 
         final int yearlyPayments = 12;
@@ -73,8 +81,7 @@ public class QuoteCalculatorHelperImpl implements QuoteCalculatorHelper {
      * @param amount Total amount of loan
      * @return Amount to pay each month
      */
-    public BigDecimal calculateMonthlyPayments(final BigDecimal discountFactor, final int amount) {
-        notNull(discountFactor, "discountFactor cannot be null");
+    public BigDecimal calculateMonthlyPayments(@NonNull final BigDecimal discountFactor, final int amount) {
         isTrue(amount > 0, "amount should be positive");
 
         return new BigDecimal(amount).divide(discountFactor, MathContext.DECIMAL128);
@@ -84,19 +91,20 @@ public class QuoteCalculatorHelperImpl implements QuoteCalculatorHelper {
      * Total amount calculated by multiplication of monthly payments and numberOf months
      * @param monthlyPayments
      * @param numberOfMonths
-     * @return
+     * @return Total repayment amount
      */
-    public BigDecimal calculateTotalPayments(final BigDecimal monthlyPayments, final int numberOfMonths) {
-        notNull(monthlyPayments, "monthlyPayments cannot be null");
+    public BigDecimal calculateTotalPayments(@NonNull final BigDecimal monthlyPayments, final int numberOfMonths) {
         isTrue(numberOfMonths > 0, "numberOfMonths should be positive");
 
         return monthlyPayments.multiply(new BigDecimal(numberOfMonths));
     }
 
-    private BigDecimal calculateWeightedAverage(final BigDecimal value1, final BigDecimal weight1,
-                                                final BigDecimal value2, final BigDecimal weight2) {
-        return value1.multiply(weight1)
-                .add(value2.multiply(weight2))
-                .divide(weight1.add(weight2), MathContext.DECIMAL128);
+    private static WeightedValue calculateWeightedAverage(final WeightedValue wv1, final WeightedValue wv2) {
+        return WeightedValue.builder().value(
+                wv1.getValue().multiply(wv1.getWeight())
+                .add(wv2.getValue().multiply(wv2.getWeight()))
+                .divide(wv1.getWeight().add(wv2.getWeight()), MathContext.DECIMAL128))
+                .weight(wv1.getWeight().add(wv2.getWeight()))
+                .build();
     }
 }

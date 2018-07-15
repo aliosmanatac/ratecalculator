@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class QuoteCalculatorHelperImplTest {
 
     @Test
     public void calculateRate_requestMoreThanAvailable_returnsEmptyOptional() {
-        TreeSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
+        SortedSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
                 Offer.builder().rate(BigDecimal.valueOf(0.69)).amount(99).lender("L1").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.69)).amount(200).lender("L2").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.69)).amount(300).lender("L3").build()));
@@ -47,7 +48,7 @@ public class QuoteCalculatorHelperImplTest {
 
     @Test
     public void calculateRate_loansOnlyFromOne_returnsEmptyOptional() {
-        TreeSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
+        SortedSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
                 Offer.builder().rate(BigDecimal.valueOf(0.5)).amount(200).lender("L1").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.15)).amount(300).lender("L2").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.0069)).amount(101).lender("L3").build()));
@@ -58,7 +59,7 @@ public class QuoteCalculatorHelperImplTest {
 
     @Test
     public void calculateRate_loanFromAll_returnsWeightedAverage() {
-        TreeSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
+        SortedSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
                 Offer.builder().rate(BigDecimal.valueOf(0.15)).amount(300).lender("L1").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.5)).amount(200).lender("L2").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.69)).amount(100).lender("L3").build()));
@@ -69,7 +70,7 @@ public class QuoteCalculatorHelperImplTest {
 
     @Test
     public void calculateRate_loansPartial_returnsWeightedAverage() {
-        TreeSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
+        SortedSet<Offer> offerSet = new TreeSet<>(Arrays.asList(
                 Offer.builder().rate(BigDecimal.valueOf(0.0015)).amount(10000).lender("L1").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.5)).amount(200).lender("L2").build(),
                 Offer.builder().rate(BigDecimal.valueOf(0.69)).amount(100).lender("L3").build()));

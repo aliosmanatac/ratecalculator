@@ -2,14 +2,13 @@ package com.zopa.calculator;
 
 import com.zopa.model.Offer;
 import com.zopa.model.Quote;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.TreeSet;
-
-import static org.springframework.util.Assert.notNull;
+import java.util.SortedSet;
 
 @Component
 public class MonthlyCompoundInterestLoanCalculator implements QuoteCalculator {
@@ -18,7 +17,6 @@ public class MonthlyCompoundInterestLoanCalculator implements QuoteCalculator {
 
     @Autowired
     public MonthlyCompoundInterestLoanCalculator(final QuoteCalculatorHelper quoteCalculatorHelper) {
-        notNull(quoteCalculatorHelper, "quoteCalculatorHelper cannot be null");
         this.quoteCalculatorHelper = quoteCalculatorHelper;
     }
 
@@ -31,7 +29,9 @@ public class MonthlyCompoundInterestLoanCalculator implements QuoteCalculator {
      * @param numberOfMonths number of months to repay the loan
      * @return Quote if requested amount is available, empty otherwise
      */
-    public Optional<Quote> calculateQuote(final TreeSet<Offer> offerSet, final int amount, final int numberOfMonths) {
+    public Optional<Quote> calculateQuote(@NonNull final SortedSet<Offer> offerSet,
+                                          final int amount,
+                                          final int numberOfMonths) {
         Optional<BigDecimal> rateOptional = quoteCalculatorHelper.calculateRate(offerSet, amount);
         if (!rateOptional.isPresent())
             return Optional.empty();

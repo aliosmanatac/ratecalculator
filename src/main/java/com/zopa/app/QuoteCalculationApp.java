@@ -1,7 +1,7 @@
 package com.zopa.app;
 
 import com.zopa.calculator.QuoteCalculator;
-import com.zopa.input.CsvParser;
+import com.zopa.input.MarketDataFileParser;
 import com.zopa.model.Offer;
 import com.zopa.model.Quote;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,35 +10,39 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.TreeSet;
+import java.util.SortedSet;
 
 import static com.zopa.config.Config.LOAN_LENGTH_IN_MONTHS;
 import static com.zopa.input.InputParser.parseRequestedAmount;
-import static org.springframework.util.Assert.notNull;
 
 @ComponentScan(basePackages = "com.zopa")
 @Configuration
 public class QuoteCalculationApp {
 
     private QuoteCalculator quoteCalculator;
-    private CsvParser csvParser;
+    private MarketDataFileParser marketDataFileParser;
 
     @Autowired
-    public QuoteCalculationApp(final QuoteCalculator quoteCalculator, final CsvParser csvParser) {
-        notNull(quoteCalculator, "quoteCalculator cannot be null");
-        notNull(csvParser, "csvParser cannot be null");
+    public QuoteCalculationApp(final QuoteCalculator quoteCalculator, final MarketDataFileParser marketDataFileParser) {
         this.quoteCalculator = quoteCalculator;
-        this.csvParser = csvParser;
+        this.marketDataFileParser = marketDataFileParser;
     }
 
-    public String start(final String[] args) {
+    /**
+     * Calculates and returns the result of the quote as String. If any problem occurs related to input data,
+     * it returns the related error message to the client
+     * @param args app arguments to start. It expects an array with marketDataFilePath and requestedAmount
+     * @return result of the calculation
+     */
+    public String calculate(final String[] args) {
         if (args.length != 2)
             return "Usage: quote [market_file] [requested_amount]";
-
+        String marketDataFile = args[0];
+        String amount = args[1];
         try {
             // Read market data from file
-            TreeSet<Offer> offerSet = csvParser.getOffersFromFile(args[0]);
-            int requestedAmount = parseRequestedAmount(args[1]);
+            SortedSet<Offer> offerSet = marketDataFileParser.getOffersFromFile(marketDataFile);
+            int requestedAmount = parseRequestedAmount(amount);
             // Calculate quote
             Optional<Quote> quoteOptional = quoteCalculator.calculateQuote(offerSet, requestedAmount, LOAN_LENGTH_IN_MONTHS);
             // return quote as string

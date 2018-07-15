@@ -12,14 +12,15 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.Assert.notNull;
 
 @Component
-public class CsvParser {
-    public TreeSet<Offer> getOffersFromFile(final String filePath) throws IOException {
+public class MarketDataFileParser {
+    public SortedSet<Offer> getOffersFromFile(final String filePath) throws IOException {
         File csvData = new File(filePath);
         CSVParser parser = CSVParser.parse(csvData, Charset.forName("UTF-8"),
                 CSVFormat.DEFAULT.withFirstRecordAsHeader()

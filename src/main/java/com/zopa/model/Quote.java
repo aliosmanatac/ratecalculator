@@ -12,20 +12,20 @@ import static com.zopa.config.Config.LOCALE;
 @Builder
 @Getter
 public class Quote {
-    int requestedAmount;
-    BigDecimal rate;
-    BigDecimal monthlyRepayment;
-    BigDecimal totalRepayment;
+    private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+    private int requestedAmount;
+    private BigDecimal rate;
+    private BigDecimal monthlyRepayment;
+    private BigDecimal totalRepayment;
 
     @Override
     public String toString() {
-        String lineSeparator = System.getProperty("line.separator");
 
         return new StringBuilder()
-                .append("Requested amount: ").append(formatCurrency(requestedAmount)).append(lineSeparator)
-                .append("Rate: ").append(formatPercentage(rate)).append(lineSeparator)
-                .append("Monthly repayment: ").append(formatCurrency(monthlyRepayment)).append(lineSeparator)
-                .append("Total repayment: ").append(formatCurrency(totalRepayment)).append(lineSeparator)
+                .append("Requested amount: ").append(formatCurrency(requestedAmount)).append(LINE_SEPARATOR)
+                .append("Rate: ").append(formatPercentage(rate)).append(LINE_SEPARATOR)
+                .append("Monthly repayment: ").append(formatCurrency(monthlyRepayment)).append(LINE_SEPARATOR)
+                .append("Total repayment: ").append(formatCurrency(totalRepayment)).append(LINE_SEPARATOR)
                 .toString();
     }
 

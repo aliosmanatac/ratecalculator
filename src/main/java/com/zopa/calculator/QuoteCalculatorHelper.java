@@ -4,6 +4,7 @@ import com.zopa.model.Offer;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public interface QuoteCalculatorHelper {
@@ -14,7 +15,7 @@ public interface QuoteCalculatorHelper {
      * @return calculated rate as optional if offers satisfy amount.
      * otherwise return empty
      */
-    Optional<BigDecimal> calculateRate(TreeSet<Offer> offerSet, int amount);
+    Optional<BigDecimal> calculateRate(SortedSet<Offer> offerSet, int amount);
 
     /**
      * Calculates discount factor
