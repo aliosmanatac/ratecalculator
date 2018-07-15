@@ -1,0 +1,11 @@
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/app/QuoteCalculationApp.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/input/CsvParser.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/calculator/QuoteCalculatorImpl.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/app/Main.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/model/Quote.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/model/Offer.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/calculator/QuoteCalculator.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/config/Config.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/input/InputParser.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/calculator/QuoteCalculatorHelper.java
+/Users/ataca/workspace/ratecalculator/src/main/java/com/zopa/calculator/QuoteCalculatorHelperImpl.java

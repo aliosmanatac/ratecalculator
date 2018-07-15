@@ -1,0 +1,5 @@
+com/zopa/calculator/QuoteCalculatorHelperImplTest.class
+com/zopa/app/QuoteCalculationAppTest.class
+com/zopa/model/QuoteTest.class
+com/zopa/calculator/QuoteCalculatorImplTest.class
+com/zopa/input/CsvParserTest.class
