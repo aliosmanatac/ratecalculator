@@ -5,7 +5,6 @@ import com.zopa.model.Offer;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 public interface QuoteCalculatorHelper {
     /**

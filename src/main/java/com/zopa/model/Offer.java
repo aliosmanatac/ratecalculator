@@ -1,12 +1,14 @@
 package com.zopa.model;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class Offer implements Comparable {
     private String lender;
     private int amount;
@@ -14,6 +16,8 @@ public class Offer implements Comparable {
 
     @Override
     public int compareTo(Object offer) {
-        return rate.compareTo(((Offer) offer).rate);
+        int result = rate.compareTo(((Offer) offer).rate);
+        // avoid equals
+        return result == 0 ? 1 : result;
     }
 }

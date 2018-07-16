@@ -5,7 +5,6 @@ import com.zopa.model.Quote;
 
 import java.util.Optional;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 public interface QuoteCalculator {
     /**
